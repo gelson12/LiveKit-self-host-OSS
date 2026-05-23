@@ -22,7 +22,14 @@ KEYS_VAL="${LIVEKIT_KEYS:-}"
 echo "[entrypoint] booting LiveKit OSS on Railway"
 echo "[entrypoint]   PORT env       = ${PORT:-<unset, defaulting to 7880>}"
 echo "[entrypoint]   bind port      = ${PORT_VAL}"
-echo "[entrypoint]   LIVEKIT_KEYS   = ${KEYS_VAL:+set (length ${#KEYS_VAL})}${KEYS_VAL:-MISSING}"
+# IMPORTANT: never echo $KEYS_VAL directly — it contains the LiveKit
+# secret and Railway's Deploy Logs are readable by anyone with project
+# access. Print only a "set/missing" indicator + length.
+if [ -n "$KEYS_VAL" ]; then
+    echo "[entrypoint]   LIVEKIT_KEYS   = set (length ${#KEYS_VAL})"
+else
+    echo "[entrypoint]   LIVEKIT_KEYS   = MISSING"
+fi
 
 if [ -z "$KEYS_VAL" ]; then
     echo "[entrypoint] FATAL: LIVEKIT_KEYS env var is empty."
