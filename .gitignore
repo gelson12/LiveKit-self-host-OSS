@@ -1,0 +1,11 @@
+# Local secrets — never tracked
+.env
+*.env
+
+# Build artifacts
+*.log
+__pycache__/
+
+# Editor
+.vscode/
+.idea/

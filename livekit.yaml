@@ -1,0 +1,28 @@
+# LiveKit OSS self-host config — tuned for Railway.
+#
+# Keys are deliberately empty here. At runtime, the LIVEKIT_KEYS env var
+# on the Railway service supplies the real key+secret pair, so the
+# actual credentials never live in this repo.
+
+port: 7880
+
+rtc:
+  # TCP fallback for media. Railway routes TCP cleanly; UDP exposure is
+  # limited on the platform. With WebRTC favoring TCP candidates, voice
+  # latency rises ~50-100ms vs UDP — fine for the voice use case here.
+  tcp_port: 7881
+
+  # UDP media range — opened in case Railway's UDP support is enabled on
+  # this project. Otherwise WebRTC negotiates the TCP fallback above.
+  port_range_start: 50000
+  port_range_end: 60000
+
+  # Advertise the box's external IP to remote clients so SDP candidates
+  # are reachable through Railway's proxy / NAT.
+  use_external_ip: true
+
+log_level: info
+
+# Empty map intentionally — overridden at runtime by `LIVEKIT_KEYS` env
+# var on the Railway service. Format: `LIVEKIT_KEYS=<key>: <secret>`.
+keys: {}
