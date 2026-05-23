@@ -41,6 +41,13 @@ CONFIG=/tmp/livekit.yaml
 cat > "$CONFIG" <<EOF
 port: ${PORT_VAL}
 
+# Explicitly bind to all IPv4 interfaces. Railway's HTTPS edge
+# proxies into the container over IPv4; without this, LiveKit can
+# end up listening only on IPv6 inside the container's dual-stack
+# network → Railway 502 with X-Railway-Fallback: true.
+bind_addresses:
+  - "0.0.0.0"
+
 rtc:
   tcp_port: 7881
   port_range_start: 50000
